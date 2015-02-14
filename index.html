@@ -38,18 +38,20 @@ function loadTableData(JsonData){
 				});
 			};
 		}
-		result += '<tr><td>{0}</td><td></div><div class=\"hshow\"><div>i</div><div class=\"textBlock\">{1}</div></div></div>'.format(
-				cobj['Title'],
-				cobj['Detail']
+		result += '<tr><td>{0}</td><td>'.format(
+				cobj['Title']
 			);
 		// <div>F</div><div>FanFiction.net</div></div>
-		if("FF" in cobj){
+		if('Detail' in cobj){
+			result+= '<div class="hshow"><div>i</div><div class="textBlock">{0}</div></div>'.format(cobj['Detail']);
+		}
+		if('FF' in cobj){
 			result+= '<div class=\"hshow\"><div><a href=\"{0}\">F</a></div><div>FanFiction.net</div></div>'.format(cobj['FF']);
 		}
-		if("AO3" in cobj){
-			result+= '<div class=\"hshow\"><div><a href=\"{0}\">A</a></div><div>ArchiveOfOurOwn.org/</div></div>'.format(cobj['AO3']);
+		if('AO3' in cobj){
+			result+= '<div class=\"hshow\"><div><a href=\"{0}\">A</a></div><div>ArchiveOfOurOwn.org</div></div>'.format(cobj['AO3']);
 		}
-		if("Other" in cobj){
+		if('Other' in cobj){
 			result+= '<div class=\"hshow\"><div><a href=\"{0}\">O</a></div><div>Other</div></div>'.format(cobj['Other']);
 		}
 		result += '</td><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td>{7}</td><td>{8}</td><td>{9}</td><td>{10}</td><td>{11}</td><td>{12}</td></tr>'.format(
