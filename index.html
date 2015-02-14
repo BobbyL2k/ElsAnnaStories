@@ -1,7 +1,98 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
 <body>
-<h1>Hello World</h1>
-<p>And it's live... sort of.</p>
+    <script>
+var xmlhttp;
+if (window.XMLHttpRequest){
+    xmlhttp=new XMLHttpRequest();
+}
+else{// for IE6, IE5
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function(){
+    if (xmlhttp.readyState==4 && xmlhttp.status==200){
+        loadTableData(xmlhttp.responseText);
+    }
+}
+xmlhttp.open("GET","combine.json",true);
+xmlhttp.send();
+
+
+function loadTableData(JsonData){
+	var obj = JSON.parse(JsonData);
+	var result = "";
+	for(var c=0; c<obj.length; c++){
+		var cobj = obj[c];
+		// First, checks if it isn't implemented yet.
+		if (!String.prototype.format) {
+			String.prototype.format = function() {
+				var args = arguments;
+				return this.replace(/{(\d+)}/g, function(match, number) { 
+					return typeof args[number] != 'undefined'
+					? args[number]
+					: match
+					;
+				});
+			};
+		}
+		result += '<tr><td>{0}</td><td></div><div class=\"hshow\"><div>i</div><div class=\"textBlock\">{1}</div></div></div>'.format(
+				cobj['Title'],
+				cobj['Detail']
+			);
+		// <div>F</div><div>FanFiction.net</div></div>
+		if("FF" in cobj){
+			result+= '<div class=\"hshow\"><div><a href=\"{0}\">F</a></div><div>FanFiction.net</div></div>'.format(cobj['FF']);
+		}
+		if("AO3" in cobj){
+			result+= '<div class=\"hshow\"><div><a href=\"{0}\">A</a></div><div>ArchiveOfOurOwn.org/</div></div>'.format(cobj['AO3']);
+		}
+		if("Other" in cobj){
+			result+= '<div class=\"hshow\"><div><a href=\"{0}\">O</a></div><div>Other</div></div>'.format(cobj['Other']);
+		}
+		result += '</td><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td>{7}</td><td>{8}</td><td>{9}</td><td>{10}</td><td>{11}</td><td>{12}</td></tr>'.format(
+				cobj['Author'],
+				cobj['Length (Words)'],
+				cobj['Story Type'],
+				cobj['Complete'],
+				cobj['Setting'],
+				cobj['Elsa\'s Character'],
+				cobj['Anna\'s Character'],
+				cobj['Elsa Powers'],
+				cobj['Sisters'],
+				cobj['Age Rating'],
+				cobj['Smut Level'],
+				cobj['Added (to this site)'],
+				cobj['Published']
+			);
+	}
+	var table = document.getElementById('content-table');
+	table.innerHTML = result;
+}
+    </script>
+    <div id="out"></div>
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">Title</th>
+			<th>Author</th>
+			<th>Words</th>
+			<th>Setting</th>
+			<th>Complete</th>
+			<th>Setting</th>
+			<th>Elsa</th>
+			<th>Anna</th>
+			<th>Powers</th>
+			<th>Sisters</th>
+			<th>Rated</th>
+			<th>Smut</th>
+			<th>Added (here)</th>
+			<th>Published</th>
+		</tr>
+	</thead>
+	<tbody id="content-table"></tbody>
+</table>
 </body>
 </html>
