@@ -88,10 +88,16 @@ function loadTableData(JsonData){
 
 function DataObjCmp(key,revert){
 	return function(a,b){
-		if(a[key] < b[key])
+		function x(x){ return typeof x=='string'?x.toLowerCase():x; }
+		if(x(a[key]) < x(b[key]))
 			return revert?  1 : -1;
-		if(a[key] > b[key])
+		if(x(a[key]) > x(b[key]))
 			return revert? -1 :  1;
+		if(a['Title'].toLowerCase() < b['Title'].toLowerCase())
+			return -1;
+		if(a['Title'].toLowerCase() > b['Title'].toLowerCase())
+			return  1;
+		console.log('Auto Database Check: detected a duplicate of the story',a['Title']);
 		return 0;
 	}
 }
@@ -100,11 +106,11 @@ var justSort = 'Title';
 
 $(document).ready(function(){
 	$('.sortable').click(function(){
-		console.log('sort',this.innerHTML);
+		// console.log('sort',this.innerHTML);
 		loadTableData(DataObj.sort(DataObjCmp(this.innerHTML,justSort==this.innerHTML)));
 		justSort = justSort==this.innerHTML?'':this.innerHTML;
 		$('.sortable').removeAttr('style');
-		$(this).attr('style','background-color: #0099ee;');
+		$(this).attr('style','background-color: #008fdf;');
 	});
 });
 

@@ -44,6 +44,9 @@ table.ficT {
     color: #fff;
     white-space: nowrap;
 }
+.ficT .sortable:hover {
+background-color: #02A0F0;
+}
 .ficT tbody th {
     background-color: #2ea879;
 }
