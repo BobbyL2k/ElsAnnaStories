@@ -41,13 +41,14 @@ function loadTableData(JsonData){
 				prefix = IndexObj['prefix'][index];
 			if(index in IndexObj['postfix'])
 				postfix = IndexObj['postfix'][index];
-			if(index in IndexObj['enum']){
-				if(typeof IndexObj['enum'][index][objc[index]] == 'undefined')
-					return 'error';
-				return prefix+IndexObj['enum'][index][objc[index]]+postfix;
-			}
-			if(index in objc)
+			if(index in objc){
+				if(index in IndexObj['enum']){
+					if(typeof IndexObj['enum'][index][objc[index]] == 'undefined')
+						return 'error';
+					return prefix+IndexObj['enum'][index][objc[index]]+postfix;
+				}
 				return prefix+objc[index]+postfix;
+			}
 			return 'n/a';
 		}
 		result += '<tr><td>{0}</td><td>'.format(
