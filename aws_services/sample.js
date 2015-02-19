@@ -15,9 +15,19 @@ var keyName = 'BabySteps.js';
 var targetSpreadsheet = "https://docs.google.com/spreadsheets/d/1tdM3N69BU_o3hv5OpmMLrJw5MhGBLv1bF70-1YI1754/pubhtml?gid=1636285301&single=true";
 var newSpreadsheetData = "";
 
-new CronJob("10 * * * * *",function(){
+new job("* 30 * * * *",function(){
+  console.log("Fetching new spreadsheet.");
+  getNewSpreadsheet(function(err,getNewSuccess){
+    if(getNewSuccess){
+      console.log("Uploading...");
+      uploadNewSpreadsheet(function(err,uploadSuccess){
+        console.log("Upload completed---");
+      });
+    }
+  });
 
 },null,true);
+getSpreadsheet();
 
 /////getNewSpreadsheet();
 //Checking amazon file storage service for anonymous read access.
@@ -40,7 +50,6 @@ s3.getBucketPolicy(params = {Bucket:"elsa-cdn"}, function(err,data){
   }
   else{
     console.log("Current Policy:\n"+JSON.stringify(data));
-    getSpreadsheet();
   }
 });
 
@@ -59,9 +68,9 @@ function getSpreadsheet()
     else if (res.statusCode=='403'){
       console.log("File forbidden");
     }
-  })
-  res.on('error',function(e){
-    console.log(e);
+    res.on('error',function(e){
+      console.log(e);
+    });
   });
 }
 
@@ -74,17 +83,17 @@ function getNewSpreadsheet(callback){
         console.log("Target spreadsheet acquired: (Displaying first 100 char)")
         console.log(data.toString().substring(0,100) + "\n\n");
         newSpreadsheetData = data;
-        callback(null,"SUCCESS");
+        callback(null,true);
       }));
     }
     else{
       console.log("Acquiring target spreadsheet failed _ with code :" +
       res.statusCode);
-      callback("ERROR",null);
+      callback("ERROR",false);
     }
     res.on('error',function(err){
       console.log(err);
-      callback(err,null)
+      callback(err,false)
     });
   });
 
@@ -96,8 +105,7 @@ function uploadNewSpreadsheet(callback){
     function(err,data){
       if(err) callback(err);
       else {
-        console.log("Upload new spreadsheet success:\n"+data.VersonId);
-        callback(null,"SUCCESS");
+        callback(null,true);
       }
     });
   }
