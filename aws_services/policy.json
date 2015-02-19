@@ -1,0 +1,18 @@
+{
+  "Id": "Policy1424343553001",
+  "Statement": [
+    {
+      "Sid": "Stmt1424343551249",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::elsa-cdn/*",
+      "Principal": {
+        "AWS": [
+          "*"
+        ]
+      }
+    }
+  ]
+}
