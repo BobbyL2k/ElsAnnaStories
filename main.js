@@ -8,9 +8,10 @@ else {
 xmlhttp.onreadystatechange=function(){
     if (xmlhttp.readyState==4 && xmlhttp.status==200){
 		var obj = JSON.parse(xmlhttp.responseText);
-		DataObj = obj['data'];
-		IndexObj = obj['index'];
-        loadTableData(DataObj);
+		loadDataObj(obj['data']);
+		loadIndexObj(obj['index']);
+		loadTabelID('table-content');
+		sortTableBy('Title');
     }
 }
 xmlhttp.open("GET","data.json",true);
@@ -19,7 +20,7 @@ xmlhttp.send();
 $(document).ready(function(){
 	$('.sortable').click(function(){
 		// console.log('sort',this.innerHTML);
-		loadTableData(DataObj.sort(DataObjCmp(getSortSetting(this.innerHTML))));
+		sortTableBy(this.innerHTML);
 		$('.sortable').removeAttr('style');
 		$(this).attr('style','background-color: #008fdf;');
 	});
