@@ -14,6 +14,7 @@ if (!String.prototype.format) {
 var DATA_OBJ,INDEX_OBJ,TABLE_ID;
 
 var TABLE_ELEMENTS = [];
+var NORMALIZED_DATA_OBJ = [];
 var TABLE_ORDER = [];
 
 var SORT_SETTING = [];
@@ -34,6 +35,7 @@ function loadTableData(){
 	if(INDEX_OBJ && DATA_OBJ){
 		for(var c=0; c<DATA_OBJ.length; c++){
 			TABLE_ORDER[c] = c;
+
 			TABLE_ELEMENTS[c] = '';
 			var objc = DATA_OBJ[c];
 			function getStoryData(index){
@@ -82,6 +84,12 @@ function loadTableData(){
 					getStoryData('Added'),
 					getStoryData('Published')
 				);
+
+			
+			NORMALIZED_DATA_OBJ[c] = {};
+			for(var key in DATA_OBJ[c]){
+				NORMALIZED_DATA_OBJ[c][key] = normalize(DATA_OBJ[c][key], key);
+			}
 		}
 	}
 }
@@ -118,25 +126,26 @@ function getSortSetting(toSort){
 	return SORT_SETTING;
 }
 
+function normalize(x, key){ 
+	//console.log(key in INDEX_OBJ.dataType, INDEX_OBJ.dataType[key]);
+	if(key in INDEX_OBJ.dataType && INDEX_OBJ.dataType[key] == 'date'){
+		//console.log('date');
+		var temp = x.split('/');
+		return parseInt(temp[0]) + parseInt(temp[1])*31 + parseInt(temp[2])*372;
+	}
+	return typeof x=='string'?x.toLowerCase():x;
+}
+
 function DATA_OBJCmp(sortSetting){
 	return function(a,b){
-		if(typeof DATA_OBJ[a][sortSetting[sortSetting.length-1].key] == 'undefined')
+		if(typeof NORMALIZED_DATA_OBJ[a][sortSetting[sortSetting.length-1].key] == 'undefined')
 			return 1;
-		if(typeof DATA_OBJ[b][sortSetting[sortSetting.length-1].key] == 'undefined')
+		if(typeof NORMALIZED_DATA_OBJ[b][sortSetting[sortSetting.length-1].key] == 'undefined')
 			return -1;
 		for(var c=sortSetting.length-1;c>=0;c--){
-			function normalize(x){ 
-				//console.log(sortSetting[c].key in INDEX_OBJ.dataType, INDEX_OBJ.dataType[sortSetting[c].key]);
-				if(sortSetting[c].key in INDEX_OBJ.dataType && INDEX_OBJ.dataType[sortSetting[c].key] == 'date'){
-					//console.log('date');
-					var temp = x.split('/');
-					return parseInt(temp[0]) + parseInt(temp[1])*31 + parseInt(temp[2])*372;
-				}
-				return typeof x=='string'?x.toLowerCase():x;
-			}
-			if(normalize(DATA_OBJ[a][sortSetting[c].key]) < normalize(DATA_OBJ[b][sortSetting[c].key]))
+			if(NORMALIZED_DATA_OBJ[a][sortSetting[c].key] < NORMALIZED_DATA_OBJ[b][sortSetting[c].key])
 				return sortSetting[c].revert?  1 : -1;
-			if(normalize(DATA_OBJ[a][sortSetting[c].key]) > normalize(DATA_OBJ[b][sortSetting[c].key]))
+			if(NORMALIZED_DATA_OBJ[a][sortSetting[c].key] > NORMALIZED_DATA_OBJ[b][sortSetting[c].key])
 				return sortSetting[c].revert? -1 :  1;
 		}
 		console.log('Auto Database Check: detected a duplicate of the story',a['Title']);
