@@ -17,6 +17,11 @@
     "postfix":
       {
         "Words":"k"
+      },
+    "dataType":
+      {
+        "Added":"date",
+        "Published":"date"
       }
   },
 "data":[
