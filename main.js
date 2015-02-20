@@ -17,8 +17,8 @@ var xmlhttp;
 if (window.XMLHttpRequest){
     xmlhttp=new XMLHttpRequest();
 }
-else{// for IE6, IE5 ***NOT TESTED***
-    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+else {
+	console.log('error: not supported XMLHttpRequest');
 }
 xmlhttp.onreadystatechange=function(){
     if (xmlhttp.readyState==4 && xmlhttp.status==200){
@@ -37,15 +37,15 @@ function loadTableData(JsonData){
 		var objc = JsonData[c];
 		function getStoryData(index){
 			var prefix='',postfix='';
-			if(index in IndexObj['prefix'])
-				prefix = IndexObj['prefix'][index];
-			if(index in IndexObj['postfix'])
-				postfix = IndexObj['postfix'][index];
+			if(index in IndexObj.prefix)
+				prefix = IndexObj.prefix[index];
+			if(index in IndexObj.postfix)
+				postfix = IndexObj.postfix[index];
 			if(index in objc){
-				if(index in IndexObj['enum']){
-					if(typeof IndexObj['enum'][index][objc[index]] == 'undefined')
+				if(index in IndexObj.enum){
+					if(typeof IndexObj.enum[index][objc[index]] == 'undefined')
 						return 'error';
-					return prefix+IndexObj['enum'][index][objc[index]]+postfix;
+					return prefix+IndexObj.enum[index][objc[index]]+postfix;
 				}
 				return prefix+objc[index]+postfix;
 			}
@@ -86,29 +86,43 @@ function loadTableData(JsonData){
 	content.innerHTML = result;
 }
 
-function DataObjCmp(key,revert){
+SortSetting = [{key:'Title',revert:false}];
+function getSortSetting(toSort){
+	if(SortSetting[SortSetting.length-1].key == toSort)
+		SortSetting[SortSetting.length-1].revert = !SortSetting[SortSetting.length-1].revert;
+	else{
+		for(var c=SortSetting.length-2;c>=0;c--){
+			if(SortSetting[c].key == toSort){
+				SortSetting = SortSetting.slice(0,c).concat(SortSetting.slice(c+1,SortSetting.length));
+			}
+		}
+		SortSetting.push({key:toSort,revert:false});
+	}
+	return SortSetting;
+}
+
+function DataObjCmp(SortSetting){
 	return function(a,b){
-		function x(x){ return typeof x=='string'?x.toLowerCase():x; }
-		if(x(a[key]) < x(b[key]))
-			return revert?  1 : -1;
-		if(x(a[key]) > x(b[key]))
-			return revert? -1 :  1;
-		if(a['Title'].toLowerCase() < b['Title'].toLowerCase())
+		if(typeof a[SortSetting[SortSetting.length-1].key] == 'undefined')
+			return 1;
+		if(typeof b[SortSetting[SortSetting.length-1].key] == 'undefined')
 			return -1;
-		if(a['Title'].toLowerCase() > b['Title'].toLowerCase())
-			return  1;
+		function normalize(x){ return typeof x=='string'?x.toLowerCase():x; }
+		for(var c=SortSetting.length-1;c>=0;c--){
+			if(normalize(a[SortSetting[c].key]) < normalize(b[SortSetting[c].key]))
+				return SortSetting[c].revert?  1 : -1;
+			if(normalize(a[SortSetting[c].key]) > normalize(b[SortSetting[c].key]))
+				return SortSetting[c].revert? -1 :  1;
+		}
 		console.log('Auto Database Check: detected a duplicate of the story',a['Title']);
 		return 0;
 	}
 }
 
-var justSort = 'Title';
-
 $(document).ready(function(){
 	$('.sortable').click(function(){
 		// console.log('sort',this.innerHTML);
-		loadTableData(DataObj.sort(DataObjCmp(this.innerHTML,justSort==this.innerHTML)));
-		justSort = justSort==this.innerHTML?'':this.innerHTML;
+		loadTableData(DataObj.sort(DataObjCmp(getSortSetting(this.innerHTML))));
 		$('.sortable').removeAttr('style');
 		$(this).attr('style','background-color: #008fdf;');
 	});
