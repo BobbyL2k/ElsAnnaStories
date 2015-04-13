@@ -2,33 +2,13 @@
 <html>
     <head>
         <title>ElsAnna Stories</title>
+	    <script src="scripts/tools/react-0.13.0.js"></script>
         <link rel="stylesheet" type="text/css" href="css/style.css">
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     </head>
 <body>
-    <script src="FictionTable.js"></script>
-    <script src="main.js"></script>
-    <div id="out"></div>
-<table class="ficT">
-	<thead>
-		<tr>
-			<th class="sortable" colspan="2" style="background-color: #008fdf;">Title</th>
-			<th class="sortable">Author</th>
-			<th class="sortable">Words</th>
-			<th class="sortable">Type</th>
-			<th class="sortable">Complete</th>
-			<th class="sortable">Setting</th>
-			<th class="sortable">Elsa</th>
-			<th class="sortable">Anna</th>
-			<th class="sortable">Powers</th>
-			<th class="sortable">Sisters</th>
-			<th class="sortable">Rated</th>
-			<th class="sortable">Smut</th>
-			<th class="sortable" title="Date the story was added to this site">Added</th>
-			<th class="sortable">Published</th>
-		</tr>
-	</thead>
-	<tbody id="table-content"></tbody>
-</table>
+	<div id="fiction-table"></div>
+    <script src="scripts/tools/tools.js"></script>
+    <script src="scripts/react/build/tools/ArkTable.js"></script>
+    <script src="scripts/react/build//main.js"></script>
 </body>
 </html>

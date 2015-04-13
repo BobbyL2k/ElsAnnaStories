@@ -1,29 +1,4 @@
 {
-"index":
-  {
-    "enum":
-      {
-        "Type":["One-Shot","Multi-Shot","Multi-Chapter"],
-        "Complete":["No","Yes"],
-        "Setting":["Canon","STP","AU","mAU"],
-        "Powers":["No","Different","Yes","Powerful"],
-        "Sisters":["No","Yes"],
-        "Rated":["K","K+","T","M","MA"],
-        "Smut":["None","Plot Focused","Medium","Heavy","Pure"]
-      },
-    "prefix":
-      {
-      },
-    "postfix":
-      {
-        "Words":"k"
-      },
-    "dataType":
-      {
-        "Added":"date",
-        "Published":"date"
-      }
-  },
 "data":[
   {
     "Title":"A Broken Mirror World",
