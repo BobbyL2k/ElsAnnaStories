@@ -1,12 +1,76 @@
+ArkTableWithFilter = React.createClass({
+	getInitialState: function(){
+		var filter = [];
+		for(var c=0; c<this.props.index.length; c++){
+			if(this.props.index[c].enum){
+				filter[c] = {
+					title:this.props.index[c].title,
+					option:[]
+				};
+				for(var c2=0; c2<this.props.index[c].enum.length; c2++){
+					filter[c].option[c2] = {
+						optionName:this.props.index[c].enum[c2],
+						checked:true
+					}
+				}
+			}
+		}
+		return {
+			toolbarActive: false,
+			filter: filter
+		}
+	},
+	toggleToolbar: function(){
+		this.setState({toolbarActive:!this.state.toolbarActive});
+	},
+	onCheckBoxChange: function(c, c2, checked){
+		var filter = this.state.filter;
+		filter[c].option[c2].checked = checked;
+		// console.log(filter);
+		this.setState({filter:filter});
+	},
+	render: function(){
+		function isValid(obj, filter){
+			for(var c=0; c<filter.length; c++){
+				if(filter[c] && typeof obj[filter[c].title] != 'undefined'){
+					if(filter[c].option[obj[filter[c].title]].checked === false){
+						// console.log(obj);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		var list = [];
+		// console.log('rendering');
+		for(var c=0;c<this.props.content.length; c++){
+			if(isValid(this.props.content[c], this.state.filter)){
+				list[list.length] = c;
+			}
+		}
+		return (
+			<div>
+				<ArkTable index={this.props.index} content={this.props.content} list={list} />
+				<Toolbar active={this.state.toolbarActive}>
+					<Filter filter={this.state.filter}
+					onClickMenuName={this.toggleToolbar}
+					onCheckBoxChange={this.onCheckBoxChange}/>
+				</Toolbar>
+			</div>
+			);
+	}
+});
+
 ArkTable = React.createClass({
 	getInitialState: function(){
-		function getInitialList(length){
-			var list = [];
-			for(var c=0; c<length; c++)
-				list[c] = c;
-			return list;
-		}
+		// function getInitialList(length){
+		// 	var list = [];
+		// 	for(var c=0; c<length; c++)
+		// 		list[c] = c;
+		// 	return list;
+		// }
 		function getNormalizedContentObj(content, index){
+			console.log('getting getNormalizedContentObj');
 			normalizedContentObj = [];
 			function normalize(content, type){
 				if(typeof content == 'string'){
@@ -31,7 +95,7 @@ ArkTable = React.createClass({
 		}
 		return {
 			sortOrder: [{key:0,revert:false}],
-			list: getInitialList(this.props.content.length),
+			// list: getInitialList(this.props.content.length),
 			normalizedContentObj: getNormalizedContentObj(this.props.content, this.props.index)
 		};
 	},
@@ -56,7 +120,7 @@ ArkTable = React.createClass({
 		this.setState({sortOrder:sortOrder});
 	},
 	render: function() {
-		var list = this.state.list;
+		var list = this.props.list;
 		function get_cmp_function ( content, index, list, sortOrder ){
 			return function (a, b){
 				if(typeof content[a][ index[ sortOrder[sortOrder.length-1].key ].title ] == 'undefined')
@@ -72,7 +136,7 @@ ArkTable = React.createClass({
 				return 0;
 			}
 		}
-		list.sort(get_cmp_function(this.state.normalizedContentObj, this.props.index, this.state.list, this.state.sortOrder));
+		list.sort(get_cmp_function(this.state.normalizedContentObj, this.props.index, this.props.list, this.state.sortOrder));
 
 		return (
 			<table className="ArkTable">
@@ -130,60 +194,63 @@ ArkTableBody = React.createClass({
 	render: function(){
 		var rows = [];
 		for(var c=0; c<this.props.list.length; c++){
-			var columns = [];
-			for(var c2=0; c2<this.props.index.length; c2++){
-				var content;
+			if(this.props.list[c]){
+				// console.log(this.props.list[c]);
+				var columns = [];
+				for(var c2=0; c2<this.props.index.length; c2++){
+					var content;
 
-				if(this.props.index[c2].SpecialCircle){
-					content = [];
-					for(var c3=0; c3<this.props.index[c2].SpecialCircle.length; c3++){
-						if(this.props.content[ this.props.list[c] ][this.props.index[c2].SpecialCircle[c3].title])
-							content[c3] = (
-								<SpecialCircle key={c3} content={this.props.content[ this.props.list[c] ][this.props.index[c2].SpecialCircle[c3].title]} setting={this.props.index[c2].SpecialCircle[c3]}/>
-								);
+					if(this.props.index[c2].SpecialCircle){
+						content = [];
+						for(var c3=0; c3<this.props.index[c2].SpecialCircle.length; c3++){
+							if(this.props.content[ this.props.list[c] ][this.props.index[c2].SpecialCircle[c3].title])
+								content[c3] = (
+									<SpecialCircle key={c3} content={this.props.content[ this.props.list[c] ][this.props.index[c2].SpecialCircle[c3].title]} setting={this.props.index[c2].SpecialCircle[c3]}/>
+									);
+						}
 					}
-				}
-				else if(this.props.index[c2].enum){
-					content = this.props.index[c2].enum[ this.props.content[ this.props.list[c] ][this.props.index[c2].title] ];
-				}
-				else{
-					content = this.props.content[ this.props.list[c] ][this.props.index[c2].title];
-				}
-
-				if(content){
-					// if(this.props.index[c2].type){
-						/// type modification
-					// }
-
-					if(this.props.index[c2].modifier && content){
-						content =
-							ifExistString(this.props.index[c2].modifier.prefix)
-							+
-							content
-							+
-							ifExistString(this.props.index[c2].modifier.postfix);
+					else if(this.props.index[c2].enum){
+						content = this.props.index[c2].enum[ this.props.content[ this.props.list[c] ][this.props.index[c2].title] ];
 					}
+					else{
+						content = this.props.content[ this.props.list[c] ][this.props.index[c2].title];
+					}
+
+					if(content){
+						// if(this.props.index[c2].type){
+							/// type modification
+						// }
+
+						if(this.props.index[c2].modifier && content){
+							content =
+								ifExistString(this.props.index[c2].modifier.prefix)
+								+
+								content
+								+
+								ifExistString(this.props.index[c2].modifier.postfix);
+						}
+					}
+					else{
+						content = 'n/a';
+					}
+					columns[c2] = (
+						<td
+						key={c2}>
+						{content}
+						</td>
+						);
 				}
-				else{
-					content = 'n/a';
-				}
-				columns[c2] = (
-					<td
-					key={c2}>
-					{content}
-					</td>
+				rows[c] = (
+					<tr
+					key={this.props.list[c]}>
+					{columns}
+					</tr>
 					);
 			}
-			rows[c] = (
-				<tr
-				key={c}>
-				{columns}
-				</tr>
-				);
 		}
 		return (
 			<tbody>
-			{rows}
+				{rows}
 			</tbody>
 			);
 	}
@@ -191,23 +258,116 @@ ArkTableBody = React.createClass({
 
 SpecialCircle = React.createClass({
 	render: function(){
-		var icon = this.props.setting.type=='link'?
+		var result = this.props.setting.type=='link'?
 			(
+			<div className="SpecialCircle">
 				<a href={this.props.content} target="_blank">
 					<div>
 						{this.props.setting.icon}
 					</div>
+					<div>{this.props.setting.type=='text'? this.props.content : this.props.setting.hover }</div>
 				</a>
+			</div>
 			):(
+			<div className="SpecialCircle">
 				<div>
 					{this.props.setting.icon}
 				</div>
-			);
-		return (
-			<div className="SpecialCircle">
-				{icon}
 				<div className={this.props.setting.type=='text'?'textBlock':''}>{this.props.setting.type=='text'? this.props.content : this.props.setting.hover }</div>
+			</div>
+			);
+		return result;
+	}
+});
+
+Toolbar = React.createClass({
+	render: function(){
+		var className = 'toolbar';
+		className += this.props.active?' active':'';
+		return (
+			<div className={className}>
+				{this.props.children}
 			</div>
 			);
 	}
 });
+
+Panel = React.createClass({
+	render: function(){
+		return (
+			<div className="panel">
+				<div className="menu-name" onClick={this.props.onClickMenuName}>
+					{this.props.menuName}
+				</div>
+				<div className="panel overflow-y">
+					{this.props.children}
+				</div>
+			</div>
+			);
+	}
+});
+
+Filter = React.createClass({
+	render: function(){
+		var checkBoxPanels = [];
+		for(var c=0; c<this.props.filter.length; c++){
+			if(this.props.filter[c]){
+				checkBoxPanels[c] = (
+					<CheckBoxPanel
+					key={c}
+					toReturn={c}
+					title={this.props.filter[c].title}
+					option={this.props.filter[c].option}
+					onCheck={this.props.onCheckBoxChange}/>
+					);
+			}
+		}
+		return (
+			<Panel menuName="Filter" onClickMenuName={this.props.onClickMenuName}>
+				{checkBoxPanels}
+			</Panel>
+			);
+	}
+});
+
+CheckBoxPanel = React.createClass({
+	onCheck: function(option, value){
+		this.props.onCheck(this.props.toReturn, option, value);
+	},
+	render: function(){
+		var activeCheckBoxs = [];
+		for(var c=0; c<this.props.option.length; c++){
+			activeCheckBoxs[c] = (
+				<ActiveCheckBox
+				key={c}
+				toReturn={c}
+				optionName={this.props.option[c].optionName}
+				checked={this.props.option[c].checked}
+				onCheck={this.onCheck} />
+				);
+		}
+		return (
+			<table className="panel">
+				<tr className="title">
+					<td colSpan="2">{this.props.title}</td>
+				</tr>
+				{activeCheckBoxs}
+			</table>
+			);
+	}
+});
+
+ActiveCheckBox = React.createClass({
+	onChange: function(){
+		this.props.onCheck(this.props.toReturn,!this.props.checked);
+	},
+	render: function(){
+		return (
+            <tr className="option" onClick={this.onChange}>
+                <td>{this.props.optionName}</td>
+                <td><input type="checkbox" checked={this.props.checked} readOnly/></td>
+            </tr>
+			);
+	}
+})
+

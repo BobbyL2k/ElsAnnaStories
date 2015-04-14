@@ -12,7 +12,7 @@ getJSON('assets/model.json',function(data) {
 function start() {
 	if(index && content){
 		React.render(
-			<ArkTable index={index} content={content} />,
+			<ArkTableWithFilter index={index} content={content} />,
 			document.getElementById('fiction-table')
 		);
 	}

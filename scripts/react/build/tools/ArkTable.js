@@ -1,12 +1,76 @@
+ArkTableWithFilter = React.createClass({displayName: "ArkTableWithFilter",
+	getInitialState: function(){
+		var filter = [];
+		for(var c=0; c<this.props.index.length; c++){
+			if(this.props.index[c].enum){
+				filter[c] = {
+					title:this.props.index[c].title,
+					option:[]
+				};
+				for(var c2=0; c2<this.props.index[c].enum.length; c2++){
+					filter[c].option[c2] = {
+						optionName:this.props.index[c].enum[c2],
+						checked:true
+					}
+				}
+			}
+		}
+		return {
+			toolbarActive: false,
+			filter: filter
+		}
+	},
+	toggleToolbar: function(){
+		this.setState({toolbarActive:!this.state.toolbarActive});
+	},
+	onCheckBoxChange: function(c, c2, checked){
+		var filter = this.state.filter;
+		filter[c].option[c2].checked = checked;
+		// console.log(filter);
+		this.setState({filter:filter});
+	},
+	render: function(){
+		function isValid(obj, filter){
+			for(var c=0; c<filter.length; c++){
+				if(filter[c] && typeof obj[filter[c].title] != 'undefined'){
+					if(filter[c].option[obj[filter[c].title]].checked === false){
+						// console.log(obj);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		var list = [];
+		// console.log('rendering');
+		for(var c=0;c<this.props.content.length; c++){
+			if(isValid(this.props.content[c], this.state.filter)){
+				list[list.length] = c;
+			}
+		}
+		return (
+			React.createElement("div", null, 
+				React.createElement(ArkTable, {index: this.props.index, content: this.props.content, list: list}), 
+				React.createElement(Toolbar, {active: this.state.toolbarActive}, 
+					React.createElement(Filter, {filter: this.state.filter, 
+					onClickMenuName: this.toggleToolbar, 
+					onCheckBoxChange: this.onCheckBoxChange})
+				)
+			)
+			);
+	}
+});
+
 ArkTable = React.createClass({displayName: "ArkTable",
 	getInitialState: function(){
-		function getInitialList(length){
-			var list = [];
-			for(var c=0; c<length; c++)
-				list[c] = c;
-			return list;
-		}
+		// function getInitialList(length){
+		// 	var list = [];
+		// 	for(var c=0; c<length; c++)
+		// 		list[c] = c;
+		// 	return list;
+		// }
 		function getNormalizedContentObj(content, index){
+			console.log('getting getNormalizedContentObj');
 			normalizedContentObj = [];
 			function normalize(content, type){
 				if(typeof content == 'string'){
@@ -31,7 +95,7 @@ ArkTable = React.createClass({displayName: "ArkTable",
 		}
 		return {
 			sortOrder: [{key:0,revert:false}],
-			list: getInitialList(this.props.content.length),
+			// list: getInitialList(this.props.content.length),
 			normalizedContentObj: getNormalizedContentObj(this.props.content, this.props.index)
 		};
 	},
@@ -56,7 +120,7 @@ ArkTable = React.createClass({displayName: "ArkTable",
 		this.setState({sortOrder:sortOrder});
 	},
 	render: function() {
-		var list = this.state.list;
+		var list = this.props.list;
 		function get_cmp_function ( content, index, list, sortOrder ){
 			return function (a, b){
 				if(typeof content[a][ index[ sortOrder[sortOrder.length-1].key ].title ] == 'undefined')
@@ -72,7 +136,7 @@ ArkTable = React.createClass({displayName: "ArkTable",
 				return 0;
 			}
 		}
-		list.sort(get_cmp_function(this.state.normalizedContentObj, this.props.index, this.state.list, this.state.sortOrder));
+		list.sort(get_cmp_function(this.state.normalizedContentObj, this.props.index, this.props.list, this.state.sortOrder));
 
 		return (
 			React.createElement("table", {className: "ArkTable"}, 
@@ -130,60 +194,63 @@ ArkTableBody = React.createClass({displayName: "ArkTableBody",
 	render: function(){
 		var rows = [];
 		for(var c=0; c<this.props.list.length; c++){
-			var columns = [];
-			for(var c2=0; c2<this.props.index.length; c2++){
-				var content;
+			if(this.props.list[c]){
+				// console.log(this.props.list[c]);
+				var columns = [];
+				for(var c2=0; c2<this.props.index.length; c2++){
+					var content;
 
-				if(this.props.index[c2].SpecialCircle){
-					content = [];
-					for(var c3=0; c3<this.props.index[c2].SpecialCircle.length; c3++){
-						if(this.props.content[ this.props.list[c] ][this.props.index[c2].SpecialCircle[c3].title])
-							content[c3] = (
-								React.createElement(SpecialCircle, {key: c3, content: this.props.content[ this.props.list[c] ][this.props.index[c2].SpecialCircle[c3].title], setting: this.props.index[c2].SpecialCircle[c3]})
-								);
+					if(this.props.index[c2].SpecialCircle){
+						content = [];
+						for(var c3=0; c3<this.props.index[c2].SpecialCircle.length; c3++){
+							if(this.props.content[ this.props.list[c] ][this.props.index[c2].SpecialCircle[c3].title])
+								content[c3] = (
+									React.createElement(SpecialCircle, {key: c3, content: this.props.content[ this.props.list[c] ][this.props.index[c2].SpecialCircle[c3].title], setting: this.props.index[c2].SpecialCircle[c3]})
+									);
+						}
 					}
-				}
-				else if(this.props.index[c2].enum){
-					content = this.props.index[c2].enum[ this.props.content[ this.props.list[c] ][this.props.index[c2].title] ];
-				}
-				else{
-					content = this.props.content[ this.props.list[c] ][this.props.index[c2].title];
-				}
-
-				if(content){
-					// if(this.props.index[c2].type){
-						/// type modification
-					// }
-
-					if(this.props.index[c2].modifier && content){
-						content =
-							ifExistString(this.props.index[c2].modifier.prefix)
-							+
-							content
-							+
-							ifExistString(this.props.index[c2].modifier.postfix);
+					else if(this.props.index[c2].enum){
+						content = this.props.index[c2].enum[ this.props.content[ this.props.list[c] ][this.props.index[c2].title] ];
 					}
+					else{
+						content = this.props.content[ this.props.list[c] ][this.props.index[c2].title];
+					}
+
+					if(content){
+						// if(this.props.index[c2].type){
+							/// type modification
+						// }
+
+						if(this.props.index[c2].modifier && content){
+							content =
+								ifExistString(this.props.index[c2].modifier.prefix)
+								+
+								content
+								+
+								ifExistString(this.props.index[c2].modifier.postfix);
+						}
+					}
+					else{
+						content = 'n/a';
+					}
+					columns[c2] = (
+						React.createElement("td", {
+						key: c2}, 
+						content
+						)
+						);
 				}
-				else{
-					content = 'n/a';
-				}
-				columns[c2] = (
-					React.createElement("td", {
-					key: c2}, 
-					content
+				rows[c] = (
+					React.createElement("tr", {
+					key: this.props.list[c]}, 
+					columns
 					)
 					);
 			}
-			rows[c] = (
-				React.createElement("tr", {
-				key: c}, 
-				columns
-				)
-				);
 		}
 		return (
 			React.createElement("tbody", null, 
-			rows
+				rows
 			)
 			);
 	}
@@ -191,23 +258,116 @@ ArkTableBody = React.createClass({displayName: "ArkTableBody",
 
 SpecialCircle = React.createClass({displayName: "SpecialCircle",
 	render: function(){
-		var icon = this.props.setting.type=='link'?
+		var result = this.props.setting.type=='link'?
 			(
+			React.createElement("div", {className: "SpecialCircle"}, 
 				React.createElement("a", {href: this.props.content, target: "_blank"}, 
 					React.createElement("div", null, 
 						this.props.setting.icon
-					)
+					), 
+					React.createElement("div", null, this.props.setting.type=='text'? this.props.content : this.props.setting.hover)
 				)
+			)
 			):(
+			React.createElement("div", {className: "SpecialCircle"}, 
 				React.createElement("div", null, 
 					this.props.setting.icon
-				)
-			);
-		return (
-			React.createElement("div", {className: "SpecialCircle"}, 
-				icon, 
+				), 
 				React.createElement("div", {className: this.props.setting.type=='text'?'textBlock':''}, this.props.setting.type=='text'? this.props.content : this.props.setting.hover)
+			)
+			);
+		return result;
+	}
+});
+
+Toolbar = React.createClass({displayName: "Toolbar",
+	render: function(){
+		var className = 'toolbar';
+		className += this.props.active?' active':'';
+		return (
+			React.createElement("div", {className: className}, 
+				this.props.children
 			)
 			);
 	}
 });
+
+Panel = React.createClass({displayName: "Panel",
+	render: function(){
+		return (
+			React.createElement("div", {className: "panel"}, 
+				React.createElement("div", {className: "menu-name", onClick: this.props.onClickMenuName}, 
+					this.props.menuName
+				), 
+				React.createElement("div", {className: "panel overflow-y"}, 
+					this.props.children
+				)
+			)
+			);
+	}
+});
+
+Filter = React.createClass({displayName: "Filter",
+	render: function(){
+		var checkBoxPanels = [];
+		for(var c=0; c<this.props.filter.length; c++){
+			if(this.props.filter[c]){
+				checkBoxPanels[c] = (
+					React.createElement(CheckBoxPanel, {
+					key: c, 
+					toReturn: c, 
+					title: this.props.filter[c].title, 
+					option: this.props.filter[c].option, 
+					onCheck: this.props.onCheckBoxChange})
+					);
+			}
+		}
+		return (
+			React.createElement(Panel, {menuName: "Filter", onClickMenuName: this.props.onClickMenuName}, 
+				checkBoxPanels
+			)
+			);
+	}
+});
+
+CheckBoxPanel = React.createClass({displayName: "CheckBoxPanel",
+	onCheck: function(option, value){
+		this.props.onCheck(this.props.toReturn, option, value);
+	},
+	render: function(){
+		var activeCheckBoxs = [];
+		for(var c=0; c<this.props.option.length; c++){
+			activeCheckBoxs[c] = (
+				React.createElement(ActiveCheckBox, {
+				key: c, 
+				toReturn: c, 
+				optionName: this.props.option[c].optionName, 
+				checked: this.props.option[c].checked, 
+				onCheck: this.onCheck})
+				);
+		}
+		return (
+			React.createElement("table", {className: "panel"}, 
+				React.createElement("tr", {className: "title"}, 
+					React.createElement("td", {colSpan: "2"}, this.props.title)
+				), 
+				activeCheckBoxs
+			)
+			);
+	}
+});
+
+ActiveCheckBox = React.createClass({displayName: "ActiveCheckBox",
+	onChange: function(){
+		this.props.onCheck(this.props.toReturn,!this.props.checked);
+	},
+	render: function(){
+		return (
+            React.createElement("tr", {className: "option", onClick: this.onChange}, 
+                React.createElement("td", null, this.props.optionName), 
+                React.createElement("td", null, React.createElement("input", {type: "checkbox", checked: this.props.checked, readOnly: true}))
+            )
+			);
+	}
+})
+

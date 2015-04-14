@@ -1,0 +1,63 @@
+/* 
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media 
+only screen and (max-width: 760px){
+
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr { 
+		display: block; 
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	.ArkTable thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	.ArkTable tr { border: 1px solid #ccc; }
+	
+	.ArkTable td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+	}
+	
+	.ArkTable td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+    
+    .ArkTable .SpecialCircle div:nth-child(1){
+        display: none;
+    }
+	
+	/*
+	Label the data
+	*/
+    .ArkTable td:nth-of-type(1):before { content: "Title"; }
+    .ArkTable td:nth-of-type(3):before { content: "Author"; }
+    .ArkTable td:nth-of-type(4):before { content: "Words"; }
+    .ArkTable td:nth-of-type(5):before { content: "Type"; }
+    .ArkTable td:nth-of-type(6):before { content: "Complete"; }
+    .ArkTable td:nth-of-type(7):before { content: "Setting"; }
+    .ArkTable td:nth-of-type(8):before { content: "Elsa"; }
+    .ArkTable td:nth-of-type(9):before { content: "Anna"; }
+    .ArkTable td:nth-of-type(10):before { content: "Powers"; }
+    .ArkTable td:nth-of-type(11):before { content: "Sisters"; }
+    .ArkTable td:nth-of-type(12):before { content: "Rated"; }
+    .ArkTable td:nth-of-type(13):before { content: "Smut"; }
+    .ArkTable td:nth-of-type(14):before { content: "Added"; }
+    .ArkTable td:nth-of-type(15):before { content: "Published"; }
+}
