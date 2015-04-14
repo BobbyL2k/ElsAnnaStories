@@ -296,7 +296,10 @@ Panel = React.createClass({displayName: "Panel",
 	render: function(){
 		return (
 			React.createElement("div", {className: "panel"}, 
-				React.createElement("div", {className: "menu-name", onClick: this.props.onClickMenuName}, 
+				React.createElement("div", {
+				className: "menu-name", 
+				onClick: this.props.onClickMenuName, 
+				onTouchStart: this.props.onClickMenuName}, 
 					this.props.menuName
 				), 
 				React.createElement("div", {className: "panel overflow-y"}, 

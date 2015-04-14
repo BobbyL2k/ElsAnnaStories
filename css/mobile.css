@@ -7,7 +7,7 @@ and also iPads specifically.
 only screen and (max-width: 760px){
 
 	/* Force table to not be like tables anymore */
-	table, thead, tbody, th, td, tr { 
+	.ArkTable table, .ArkTable thead, .ArkTable tbody, .ArkTable th, .ArkTable td, .ArkTable tr { 
 		display: block; 
 	}
 	

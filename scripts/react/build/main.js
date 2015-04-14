@@ -11,6 +11,7 @@ getJSON('assets/model.json',function(data) {
 
 function start() {
 	if(index && content){
+		React.initializeTouchEvents(true);
 		React.render(
 			React.createElement(ArkTableWithFilter, {index: index, content: content}),
 			document.getElementById('fiction-table')

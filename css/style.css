@@ -102,6 +102,8 @@ a:link,a:visited, a:hover, a:active{
 }
 /* Toolbar */
 .toolbar {
+    font-size: 1.15em;
+
     position: fixed;
     background-color: #03A9F4;
     color: white;
