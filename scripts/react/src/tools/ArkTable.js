@@ -50,14 +50,28 @@ ArkTableWithFilter = React.createClass({
 		}
 		return (
 			<div>
-				<ArkTable index={this.props.index} content={this.props.content} list={list} />
 				<Toolbar active={this.state.toolbarActive}>
 					<Filter filter={this.state.filter}
 					onClickMenuName={this.toggleToolbar}
 					onCheckBoxChange={this.onCheckBoxChange}/>
 				</Toolbar>
+				<div className="body">
+					<MobileTopBar
+						onClickButton={this.toggleToolbar}/>
+					<ArkTable index={this.props.index} content={this.props.content} list={list} />
+				</div>
 			</div>
 			);
+	}
+});
+
+MobileTopBar = React.createClass({
+	render: function(){
+		return (<div className="Mobile TopBar">
+				<div
+				className="button"
+				onTouchStart={this.props.onClickButton}/>
+			</div>);
 	}
 });
 
@@ -298,8 +312,7 @@ Panel = React.createClass({
 			<div className="panel">
 				<div
 				className="menu-name"
-				onClick={this.props.onClickMenuName}
-				onTouchStart={this.props.onClickMenuName}>
+				onClick={this.props.onClickMenuName}>
 					{this.props.menuName}
 				</div>
 				<div className="panel overflow-y">

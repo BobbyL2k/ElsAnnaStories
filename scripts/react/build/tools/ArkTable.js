@@ -50,14 +50,28 @@ ArkTableWithFilter = React.createClass({displayName: "ArkTableWithFilter",
 		}
 		return (
 			React.createElement("div", null, 
-				React.createElement(ArkTable, {index: this.props.index, content: this.props.content, list: list}), 
 				React.createElement(Toolbar, {active: this.state.toolbarActive}, 
 					React.createElement(Filter, {filter: this.state.filter, 
 					onClickMenuName: this.toggleToolbar, 
 					onCheckBoxChange: this.onCheckBoxChange})
+				), 
+				React.createElement("div", {className: "body"}, 
+					React.createElement(MobileTopBar, {
+						onClickButton: this.toggleToolbar}), 
+					React.createElement(ArkTable, {index: this.props.index, content: this.props.content, list: list})
 				)
 			)
 			);
+	}
+});
+
+MobileTopBar = React.createClass({displayName: "MobileTopBar",
+	render: function(){
+		return (React.createElement("div", {className: "Mobile TopBar"}, 
+				React.createElement("div", {
+				className: "button", 
+				onTouchStart: this.props.onClickButton})
+			));
 	}
 });
 
@@ -298,8 +312,7 @@ Panel = React.createClass({displayName: "Panel",
 			React.createElement("div", {className: "panel"}, 
 				React.createElement("div", {
 				className: "menu-name", 
-				onClick: this.props.onClickMenuName, 
-				onTouchStart: this.props.onClickMenuName}, 
+				onClick: this.props.onClickMenuName}, 
 					this.props.menuName
 				), 
 				React.createElement("div", {className: "panel overflow-y"}, 
