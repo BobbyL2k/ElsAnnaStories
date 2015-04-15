@@ -13,6 +13,7 @@ body{
 a:link,a:visited, a:hover, a:active{
     color: inherit;
     text-decoration: none;
+    cursor:pointer;
 }
 @media (min-width: 760px){
     table.ArkTable {
@@ -48,6 +49,7 @@ a:link,a:visited, a:hover, a:active{
     }
     .ArkTable thead .sortable:hover {
         background-color: #02A0F0;
+        cursor:pointer;
     }
     .ArkTable thead .sorted{
         background-color: #008fdf;
@@ -90,10 +92,6 @@ a:link,a:visited, a:hover, a:active{
         margin: -1.25em 1.4em;
         background-color: #e5e5e5;
     }
-    .SpecialCircle a:link,a:visited, a:hover, a:active{
-        color: inherit;
-        text-decoration: none;
-    }
     .SpecialCircle .textBlock{
         text-align: justify;
         text-indent: 1em;
@@ -118,11 +116,13 @@ a:link,a:visited, a:hover, a:active{
     background-color: #008fdf;
     top: calc(50% - 2em);
 }
-.toolbar table.panel tr:hover {
+.toolbar table.panel tr:nth-child(n+2):hover {
     background-color: #02A0F0;
+    cursor:pointer;
 }
 .toolbar .menu-name{
     margin-bottom: 0.3em;
+    cursor:pointer;
 }
 .toolbar .slide{
     float: left;

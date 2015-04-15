@@ -16,16 +16,16 @@
 					"icon":"i"
 				},
 				{
-					"title":"FF",
-					"hover":"FanFiction.net",
-					"type":"link",
-					"icon":"F"
-				},
-				{
 					"title":"AO3",
 					"hover":"ArchiveOfOurOwn.org",
 					"type":"link",
 					"icon":"A"
+				},
+				{
+					"title":"FF",
+					"hover":"FanFiction.net",
+					"type":"link",
+					"icon":"F"
 				},
 				{
 					"title":"Other",
