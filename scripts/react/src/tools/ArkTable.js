@@ -55,11 +55,9 @@ ArkTableWithFilter = React.createClass({
 					onClickMenuName={this.toggleToolbar}
 					onCheckBoxChange={this.onCheckBoxChange}/>
 				</Toolbar>
-				<div className="body">
-					<MobileTopBar
-						onClickButton={this.toggleToolbar}/>
-					<ArkTable index={this.props.index} content={this.props.content} list={list} />
-				</div>
+				<MobileTopBar
+					onClickButton={this.toggleToolbar}/>
+				<ArkTable index={this.props.index} content={this.props.content} list={list} />
 			</div>
 			);
 	}
@@ -315,7 +313,7 @@ Panel = React.createClass({
 				onClick={this.props.onClickMenuName}>
 					{this.props.menuName}
 				</div>
-				<div className="panel overflow-y">
+				<div className="inner-panel overflow-y">
 					{this.props.children}
 				</div>
 			</div>

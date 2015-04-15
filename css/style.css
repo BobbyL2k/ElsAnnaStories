@@ -96,25 +96,29 @@ a:link,a:visited, a:hover, a:active{
         text-align: justify;
         text-indent: 1em;
     }
+    /* Toolbar */
+    .toolbar {
+        height: calc(50% + 1em);
+        top: calc(100% - 2em);
+        right: 10%;
+        border-radius: 5px 5px 0 0;
+        transition: top 0.3s;
+        transition-timing-function: cubic-bezier(0.075, 0.820, 0.165, 1.000);
+    }
+    .toolbar.active {
+        top: calc(50% - 2em);
+    }
 }
 /* Toolbar */
 .toolbar {
     font-size: 1.15em;
-
     position: fixed;
     background-color: #03A9F4;
     color: white;
-    height: calc(50% + 1em);
     padding: 0.5em 1em;
-    top: calc(100% - 2em);
-    right: 10%;
-    border-radius: 5px 5px 0 0;
-    transition: top 0.3s;
-    transition-timing-function: cubic-bezier(0.075, 0.820, 0.165, 1.000);
 }
 .toolbar.active {
     background-color: #008fdf;
-    top: calc(50% - 2em);
 }
 .toolbar table.panel tr:nth-child(n+2):hover {
     background-color: #02A0F0;
@@ -130,6 +134,9 @@ a:link,a:visited, a:hover, a:active{
 }
 .toolbar div.panel{
     height: 100%;
+}
+.toolbar div.inner-panel{
+    height: calc(100% - 1.3em);
 }
 .toolbar table.panel{
     width: 100%;
