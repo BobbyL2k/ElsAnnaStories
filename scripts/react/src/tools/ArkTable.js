@@ -229,10 +229,6 @@ ArkTableBody = React.createClass({
 					}
 
 					if(content){
-						// if(this.props.index[c2].type){
-							/// type modification
-						// }
-
 						if(this.props.index[c2].modifier && content){
 							content =
 								ifExistString(this.props.index[c2].modifier.prefix)
@@ -270,14 +266,23 @@ ArkTableBody = React.createClass({
 
 SpecialCircle = React.createClass({
 	render: function(){
+		var content = this.props.content;
+		if(this.props.setting.modifier){
+			content =
+				ifExistString(this.props.setting.modifier.prefix)
+				+
+				content
+				+
+				ifExistString(this.props.setting.modifier.postfix);
+		}
 		var result = this.props.setting.type=='link'?
 			(
 			<div className="SpecialCircle">
-				<a href={this.props.content} target="_blank">
+				<a href={content} target="_blank">
 					<div>
 						{this.props.setting.icon}
 					</div>
-					<div>{this.props.setting.type=='text'? this.props.content : this.props.setting.hover }</div>
+					<div>{this.props.setting.hover}</div>
 				</a>
 			</div>
 			):(
@@ -285,7 +290,7 @@ SpecialCircle = React.createClass({
 				<div>
 					{this.props.setting.icon}
 				</div>
-				<div className={this.props.setting.type=='text'?'textBlock':''}>{this.props.setting.type=='text'? this.props.content : this.props.setting.hover }</div>
+				<div className={this.props.setting.type=='text'?'textBlock':''}>{this.props.setting.type=='text'? content : this.props.setting.hover }</div>
 			</div>
 			);
 		return result;

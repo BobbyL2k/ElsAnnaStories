@@ -229,10 +229,6 @@ ArkTableBody = React.createClass({displayName: "ArkTableBody",
 					}
 
 					if(content){
-						// if(this.props.index[c2].type){
-							/// type modification
-						// }
-
 						if(this.props.index[c2].modifier && content){
 							content =
 								ifExistString(this.props.index[c2].modifier.prefix)
@@ -270,14 +266,23 @@ ArkTableBody = React.createClass({displayName: "ArkTableBody",
 
 SpecialCircle = React.createClass({displayName: "SpecialCircle",
 	render: function(){
+		var content = this.props.content;
+		if(this.props.setting.modifier){
+			content =
+				ifExistString(this.props.setting.modifier.prefix)
+				+
+				content
+				+
+				ifExistString(this.props.setting.modifier.postfix);
+		}
 		var result = this.props.setting.type=='link'?
 			(
 			React.createElement("div", {className: "SpecialCircle"}, 
-				React.createElement("a", {href: this.props.content, target: "_blank"}, 
+				React.createElement("a", {href: content, target: "_blank"}, 
 					React.createElement("div", null, 
 						this.props.setting.icon
 					), 
-					React.createElement("div", null, this.props.setting.type=='text'? this.props.content : this.props.setting.hover)
+					React.createElement("div", null, this.props.setting.hover)
 				)
 			)
 			):(
@@ -285,7 +290,7 @@ SpecialCircle = React.createClass({displayName: "SpecialCircle",
 				React.createElement("div", null, 
 					this.props.setting.icon
 				), 
-				React.createElement("div", {className: this.props.setting.type=='text'?'textBlock':''}, this.props.setting.type=='text'? this.props.content : this.props.setting.hover)
+				React.createElement("div", {className: this.props.setting.type=='text'?'textBlock':''}, this.props.setting.type=='text'? content : this.props.setting.hover)
 			)
 			);
 		return result;

@@ -19,13 +19,19 @@
 					"title":"AO3",
 					"hover":"ArchiveOfOurOwn.org",
 					"type":"link",
-					"icon":"A"
+					"icon":"A",
+					"modifier":{
+						"prefix":"http://archiveofourown.org/works/"
+					}
 				},
 				{
 					"title":"FF",
 					"hover":"FanFiction.net",
 					"type":"link",
-					"icon":"F"
+					"icon":"F",
+					"modifier":{
+						"prefix":"https://www.fanfiction.net/s/"
+					}
 				},
 				{
 					"title":"Other",

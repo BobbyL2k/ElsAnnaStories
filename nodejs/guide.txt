@@ -1,0 +1,14 @@
+###Guidelines for adding stories to the database
+
+* If the details are **unknown** please **leave that column empty** so someone else can fill it.
+* If the some details are consider **spoiler** please **leave that column empty**.
+* Certain column **must be fill with one of the listed options**, otherwise it will not be display be the site.
+
+Title|Author|Words|Type|Complete|Setting|Elsa|Anna|Powers|Sisters|Rated|Smut|Added|Published|Detail|AO3|FF|Other
+-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-
+insert anything|insert anything|insert anything|One-Shot|No|Canon|insert anything|insert anything|No|No|K|None|insert anything|insert anything|insert anything|insert anything|insert anything|insert anything
+ |||Multi-Shot|Yes|STP|||Different|Yes|K+|Plot Focused||||||
+ |||Multi-Chapter||AU|||Yes||T|Medium||||||
+ |||||mAU|||Powerful||M|Heavy||||||
+ ||||||||||MA|Pure||||||
+ 
