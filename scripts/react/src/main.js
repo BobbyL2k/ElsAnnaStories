@@ -1,7 +1,8 @@
-var index,content;
+var index=null,
+	tableData=null;
 
 getJSON('assets/data.json',function(data) {
-	content = data.data;
+	tableData = data.data;
 	start();
 });
 getJSON('assets/model.json',function(data) {
@@ -10,10 +11,10 @@ getJSON('assets/model.json',function(data) {
 });
 
 function start() {
-	if(index && content){
+	if(index && tableData){
 		React.initializeTouchEvents(true);
 		React.render(
-			<ArkTableWithFilter index={index} content={content} />,
+			<ArkTableWithFilter index={index} content={tableData} />,
 			document.getElementById('fiction-table')
 		);
 	}
